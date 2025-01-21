@@ -305,6 +305,7 @@ function EspObject:Render()
                 local pos2, onScreen2 = worldToScreen(part2.Position);
     
                 if onScreen1 and onScreen2 then
+                    -- Render the skeleton line
                     line.Visible = true;
                     line.Color = parseColor(self, options.skeletonColor[1]);
                     line.Transparency = options.skeletonColor[2];
@@ -314,18 +315,14 @@ function EspObject:Render()
                     line.Visible = false;
                 end
             else
-                if not part1 then
-
-                end
-                if not part2 then
-
-                end
+                -- Hide the line if conditions are not met
                 line.Visible = false;
             end
         end
     else
 
     end
+    
     
 
 	visible.boxFill.Visible = enabled and onScreen and options.boxFill;
