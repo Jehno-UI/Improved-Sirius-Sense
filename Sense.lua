@@ -292,29 +292,41 @@ function EspObject:Render()
 		boxOutline.Transparency = options.boxOutlineColor[2];
 	end
 
-	local skeletonEnabled = enabled and onScreen and options.skeleton;
-	for connection, line in pairs(self.drawings.skeleton) do
-	    local parts = connection:split("_");
-	    local part1 = self.character:FindFirstChild(parts[1]);
-	    local part2 = self.character:FindFirstChild(parts[2]);
-	
-	    if skeletonEnabled and part1 and part2 then
-	        local pos1, onScreen1 = worldToScreen(part1.Position);
-	        local pos2, onScreen2 = worldToScreen(part2.Position);
-	
-	        if onScreen1 and onScreen2 then
-	            line.Visible = true;
-	            line.Color = parseColor(self, options.skeletonColor[1]);
-	            line.Transparency = options.skeletonColor[2];
-	            line.From = pos1;
-	            line.To = pos2;
-	        else
-	            line.Visible = false;
-	        end
-	    else
-	        line.Visible = false;
-	    end
-	end
+    local skeletonEnabled = enabled and onScreen and options.skeleton;
+
+    if self.character then
+        for connection, line in pairs(self.drawings.skeleton) do
+            local parts = connection:split("_");
+            local part1 = self.character:FindFirstChild(parts[1]);
+            local part2 = self.character:FindFirstChild(parts[2]);
+    
+            if skeletonEnabled and part1 and part2 then
+                local pos1, onScreen1 = worldToScreen(part1.Position);
+                local pos2, onScreen2 = worldToScreen(part2.Position);
+    
+                if onScreen1 and onScreen2 then
+                    line.Visible = true;
+                    line.Color = parseColor(self, options.skeletonColor[1]);
+                    line.Transparency = options.skeletonColor[2];
+                    line.From = pos1;
+                    line.To = pos2;
+                else
+                    line.Visible = false;
+                end
+            else
+                if not part1 then
+
+                end
+                if not part2 then
+
+                end
+                line.Visible = false;
+            end
+        end
+    else
+
+    end
+    
 
 	visible.boxFill.Visible = enabled and onScreen and options.boxFill;
 	if visible.boxFill.Visible then
