@@ -399,7 +399,7 @@ function EspObject:Render()
     visible.weapon.Visible = enabled and onScreen and options.weapon
     if visible.weapon.Visible then
         local weapon = visible.weapon
-        weapon.Text = EspInterface.getWeapon(self.player) 
+        weapon.Text = getWeapon(self.player) 
         weapon.Size = interface.sharedSettings.textSize
         weapon.Font = interface.sharedSettings.textFont
         weapon.Color = parseColor(self, options.weaponColor[1])
@@ -758,7 +758,7 @@ function EspInterface.Unload()
 	EspInterface._hasLoaded = false;
 end
 
-function EspInterface.getWeapon(player)
+function getWeapon(player)
     local character = player and EspInterface.getCharacter(player)
     if not character then return "Hands" end
     for _, child in ipairs(character:GetChildren()) do
