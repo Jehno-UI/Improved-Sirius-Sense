@@ -360,7 +360,7 @@ function EspObject:Render()
         local barTo = corners.bottomLeft - HEALTH_BAR_OFFSET;
     
         local healthText = visible.healthText;
-        healthText.Text = round(self.health) .. "hp";
+        healthText.Text = round(self.health);
         healthText.Size = interface.sharedSettings.textSize;
         healthText.Font = interface.sharedSettings.textFont;
         healthText.Color = parseColor(self, options.healthTextColor[1]); 
