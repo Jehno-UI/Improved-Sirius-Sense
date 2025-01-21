@@ -177,6 +177,29 @@ function EspObject:Construct()
 		}
 	};
 
+	self.drawings.skeleton = {};
+	local skeletonConnections = {
+	    {"Head", "UpperTorso"},
+	    {"UpperTorso", "LowerTorso"},
+	    {"LowerTorso", "LeftUpperLeg"},
+	    {"LeftUpperLeg", "LeftLowerLeg"},
+	    {"LeftLowerLeg", "LeftFoot"},
+	    {"LowerTorso", "RightUpperLeg"},
+	    {"RightUpperLeg", "RightLowerLeg"},
+	    {"RightLowerLeg", "RightFoot"},
+	    {"UpperTorso", "LeftUpperArm"},
+	    {"LeftUpperArm", "LeftLowerArm"},
+	    {"LeftLowerArm", "LeftHand"},
+	    {"UpperTorso", "RightUpperArm"},
+	    {"RightUpperArm", "RightLowerArm"},
+	    {"RightLowerArm", "RightHand"},
+	};
+	
+	for _, connection in ipairs(skeletonConnections) do
+	    self.drawings.skeleton[connection[1] .. "_" .. connection[2]] =
+	        self:_create("Line", { Thickness = 1, Visible = false });
+	end
+
 	self.renderConnection = runService.Heartbeat:Connect(function(deltaTime)
 		self:Update(deltaTime);
 		self:Render(deltaTime);
@@ -269,6 +292,29 @@ function EspObject:Render()
 		boxOutline.Transparency = options.boxOutlineColor[2];
 	end
 
+	local skeletonEnabled = enabled and onScreen and options.skeleton;
+	    for connection, line in pairs(self.drawings.skeleton) do
+	        local parts = connection:split("_");
+	        local part1 = findFirstChild(self.character, parts[1]);
+	        local part2 = findFirstChild(self.character, parts[2]);
+	
+	        if skeletonEnabled and part1 and part2 then
+	            local pos1, onScreen1 = worldToScreen(part1.Position);
+	            local pos2, onScreen2 = worldToScreen(part2.Position);
+	
+	            if onScreen1 and onScreen2 then
+	                line.Visible = true;
+	                line.Color = parseColor(self, options.skeletonColor[1]);
+	                line.Transparency = options.skeletonColor[2];
+	                line.From = pos1;
+	                line.To = pos2;
+	            else
+	                line.Visible = false;
+	            end
+	        else
+	            line.Visible = false;
+	    end
+	end
 	visible.boxFill.Visible = enabled and onScreen and options.boxFill;
 	if visible.boxFill.Visible then
 		local boxFill = visible.boxFill;
@@ -591,6 +637,8 @@ local EspInterface = {
 			chamsVisibleOnly = false,
 			chamsFillColor = { Color3.new(0.2, 0.2, 0.2), 0.5 },
 			chamsOutlineColor = { Color3.new(1,0,0), 0 },
+			skeleton = false,
+			skeletonColor = { Color3.new(1, 1, 1), 1 },
 		},
 		friendly = {
 			enabled = false,
@@ -637,7 +685,9 @@ local EspInterface = {
 			chams = false,
 			chamsVisibleOnly = false,
 			chamsFillColor = { Color3.new(0.2, 0.2, 0.2), 0.5 },
-			chamsOutlineColor = { Color3.new(0,1,0), 0 }
+			chamsOutlineColor = { Color3.new(0,1,0), 0 },
+			skeleton = false,
+			skeletonColor = { Color3.new(1, 1, 1), 1 },
 		}
 	}
 };
