@@ -360,16 +360,17 @@ function EspObject:Render()
         local barTo = corners.bottomLeft - HEALTH_BAR_OFFSET;
     
         local healthText = visible.healthText;
-        healthText.Text = round(self.health);
+        healthText.Text = round(self.health) .. "hp";
         healthText.Size = interface.sharedSettings.textSize;
         healthText.Font = interface.sharedSettings.textFont;
-        healthText.Color = parseColor(self, options.healthTextColor[1]);
+        healthText.Color = parseColor(self, options.healthTextColor[1]); 
         healthText.Transparency = options.healthTextColor[2];
         healthText.Outline = options.healthTextOutline;
         healthText.OutlineColor = parseColor(self, options.healthTextOutlineColor, true);
     
-        healthText.Position = lerp2(barTo, barFrom, self.health / self.maxHealth) - healthText.TextBounds * 0.5 - HEALTH_TEXT_OFFSET + Vector2.new(0, HEALTH_TEXT_VERTICAL_ADJUSTMENT);
+        healthText.Position = lerp2(barTo, barFrom, self.health / self.maxHealth) - healthText.TextBounds * 0.5 + Vector2.new(0, HEALTH_TEXT_VERTICAL_ADJUSTMENT);
     end
+    
 
 	visible.name.Visible = enabled and onScreen and options.name;
 	if visible.name.Visible then
