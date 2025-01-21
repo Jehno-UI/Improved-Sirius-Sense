@@ -765,7 +765,11 @@ function EspInterface.getWeapon(player)
     if not character then return "Hands" end
     for _, child in ipairs(character:GetChildren()) do
         if child:IsA("Tool") or (child:IsA("Model") and child:FindFirstChild("Handle")) then
-            return child.Name 
+            if child.Name == "HolsterModel" then
+                return "Medkit"
+            else
+                return child.Name 
+            end
         end
     end
     return "Hands"
