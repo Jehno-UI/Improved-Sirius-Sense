@@ -352,7 +352,7 @@ function EspObject:Render()
 	end
 
     local HEALTH_TEXT_OFFSET = Vector2.new(3, 0); 
-    local HEALTH_TEXT_VERTICAL_ADJUSTMENT = 10; 
+    local HEALTH_TEXT_VERTICAL_ADJUSTMENT = 7; 
     
     visible.healthText.Visible = enabled and onScreen and options.healthText;
     if visible.healthText.Visible then
