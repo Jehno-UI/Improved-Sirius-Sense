@@ -350,7 +350,7 @@ function EspObject:Render()
 		healthBarOutline.Color = parseColor(self, options.healthBarOutlineColor[1], true);
 		healthBarOutline.Transparency = options.healthBarOutlineColor[2];
 	end
-
+    
     local HEALTH_TEXT_OFFSET = Vector2.new(3, 0); 
     local HEALTH_TEXT_VERTICAL_ADJUSTMENT = 5; 
     
@@ -371,7 +371,6 @@ function EspObject:Render()
         healthText.Position = lerp2(barTo, barFrom, self.health / self.maxHealth) - healthText.TextBounds * 0.5 + Vector2.new(0, HEALTH_TEXT_VERTICAL_ADJUSTMENT);
     end
     
-
 	visible.name.Visible = enabled and onScreen and options.name;
 	if visible.name.Visible then
 		local name = visible.name;
@@ -397,20 +396,18 @@ function EspObject:Render()
 		distance.Position = (corners.bottomLeft + corners.bottomRight)*0.5 + DISTANCE_OFFSET;
 	end
 
-	visible.weapon.Visible = enabled and onScreen and options.weapon;
-	if visible.weapon.Visible then
-		local weapon = visible.weapon;
-		weapon.Text = self.weapon;
-		weapon.Size = interface.sharedSettings.textSize;
-		weapon.Font = interface.sharedSettings.textFont;
-		weapon.Color = parseColor(self, options.weaponColor[1]);
-		weapon.Transparency = options.weaponColor[2];
-		weapon.Outline = options.weaponOutline;
-		weapon.OutlineColor = parseColor(self, options.weaponOutlineColor, true);
-		weapon.Position =
-			(corners.bottomLeft + corners.bottomRight)*0.5 +
-			(visible.distance.Visible and DISTANCE_OFFSET + Vector2.yAxis*visible.distance.TextBounds.Y or Vector2.zero);
-	end
+    visible.weapon.Visible = enabled and onScreen and options.weapon
+    if visible.weapon.Visible then
+        local weapon = visible.weapon
+        weapon.Text = EspInterface.getWeapon(self.player) 
+        weapon.Size = interface.sharedSettings.textSize
+        weapon.Font = interface.sharedSettings.textFont
+        weapon.Color = parseColor(self, options.weaponColor[1])
+        weapon.Transparency = options.weaponColor[2]
+        weapon.Outline = options.weaponOutline
+        weapon.OutlineColor = parseColor(self, options.weaponOutlineColor, true)
+        weapon.Position =(corners.bottomLeft + corners.bottomRight) * 0.5 +(visible.distance.Visible and DISTANCE_OFFSET + Vector2.yAxis * visible.distance.TextBounds.Y or Vector2.zero)
+    end
 
 	visible.tracer.Visible = enabled and onScreen and options.tracer;
 	visible.tracerOutline.Visible = visible.tracer.Visible and options.tracerOutline;
@@ -761,9 +758,15 @@ function EspInterface.Unload()
 	EspInterface._hasLoaded = false;
 end
 
--- game specific functions
 function EspInterface.getWeapon(player)
-	return "Unknown";
+    local character = player and EspInterface.getCharacter(player)
+    if not character then return "Hands" end
+    for _, child in ipairs(character:GetChildren()) do
+        if child:IsA("Tool") or (child:IsA("Model") and child:FindFirstChild("Handle")) then
+            return child.Name 
+        end
+    end
+    return "Hands"
 end
 
 function EspInterface.isFriendly(player)
